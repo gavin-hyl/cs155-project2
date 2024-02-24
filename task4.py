@@ -64,6 +64,8 @@ def produce_plot(iids: list, name: str):
         y = V_tilde[1][iid - 1]
         plt.annotate(f"{MOVIES['Movie Title'][iid-1]}", (x, y), fontsize=7)
         plt.scatter(x, y, c="tab:blue", s=6)
+    plt.axvline(x=0, linestyle='--')
+    plt.axhline(y=0, linestyle='--')
     plt.autoscale(enable=True)
     plt.savefig(f'figs/task4-{name}.png', dpi=720)
     plt.cla()
