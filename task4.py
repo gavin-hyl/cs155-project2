@@ -11,7 +11,7 @@ MOVIES = pd.read_csv('movies.csv')
 reader = Reader(rating_scale=(1, 5))
 
 # Read the csv files
-train_df = pd.read_csv('train.csv')
+train_df = pd.read_csv('data.csv')
 test_df = pd.read_csv('test.csv')
 train_df = train_df[['User ID', 'Movie ID', 'Rating']]
 print(train_df.describe())
@@ -62,11 +62,10 @@ def produce_plot(iids: list, name: str):
     for iid in iids:
         x = V_tilde[0][iid - 1]
         y = V_tilde[1][iid - 1]
-        plt.text(x, y, f"{MOVIES['Movie Title'][iid-1]}", fontsize=7)
-        plt.scatter(x, y, c="black", s=6)
-
+        plt.annotate(f"{MOVIES['Movie Title'][iid-1]}", (x, y), fontsize=7)
+        plt.scatter(x, y, c="tab:blue", s=6)
     plt.autoscale(enable=True)
-    plt.savefig(f'figs/task4-{name}.png')
+    plt.savefig(f'figs/task4-{name}.png', dpi=720)
     plt.cla()
 
 produce_plot(popular_iid, 'popular')
@@ -81,9 +80,8 @@ def first_movies_of_genre(genre: str, lim: int = 10):
     for _, row in MOVIES.iterrows():
         if row[genre] == 1:
             iids.append(row['Movie ID'])
-        if len(iids) >= lim:
-            return iids
-    return iids
+    counts = train_df['Movie ID'].value_counts()
+    return sorted(iids, key=lambda id: counts.get(id), reverse=True)[:lim]
 
 # three genres: comedy, action, and documentary
 genres = ['Action', 'Comedy', 'Documentary']
